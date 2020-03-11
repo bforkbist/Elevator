@@ -34,7 +34,7 @@ class Elevator{
     }
 //fuction called when lift opens
     public static void Open(int j,char t) throws InterruptedException{
-        Thread.sleep(1000);
+        // Thread.sleep(1000);
         System.out.println("doors are opening for "+j+" make space");
         myfloor=j;
         int s=count();
@@ -50,7 +50,8 @@ class Elevator{
                 t='u';
             }
         }
-        Thread.sleep(2000);
+        // Thread.sleep(2000);
+        
         addPassenger(j,t);
     }
 //add passenger in between
@@ -61,18 +62,32 @@ class Elevator{
         System.out.println("enter the passenger boarded");
         int n= in.nextInt();
         current=myfloor;
-        System.out.println(current);
+        System.out.println(current +" "+t);
         // System.out.println("call by typing D or U");
-        // go=in.next().toLowerCase();
+        
         for(int i = 0 ; i < n ; i++ ){
-            System.out.println("enter the floor you want to go passenger "+(i+1));
+        
+            System.out.println("enter the direction and floor you want for passenger "+(i+1));
+            char go=in.next().toLowerCase().charAt(0);
             myfloor=in.nextInt();
+            if(go == 'd'){
+                if(myfloor>current)
+                    System.out.println("wrong direction");
+            }else if(t==go)   
+                floorMap.put(myfloor,floorMap.get(myfloor)+1);
+            else if(go == 'u'){
+                if(myfloor<current)
+                    System.out.println("wrong direction");
+            }else if(t==go)   
+                floorMap.put(myfloor,floorMap.get(myfloor)+1);
+            
             if(current==myfloor){
                 System.out.println("we are on the same floor /n try filling details again");
                 // passenger();
             }
-
-            floorMap.put(myfloor,floorMap.get(myfloor)+1);
+            
+            // else
+            //     System.out.println("sorry wrong direction");
 
         }
     }
@@ -87,7 +102,7 @@ class Elevator{
             System.out.println("lift is coming up");
         else 
             System.out.println("doors are opening");
-        Thread.sleep(myfloor*1000);
+        // Thread.sleep(myfloor*1000);
         mechanism();
     }
 //check whether up or down 
@@ -116,7 +131,7 @@ class Elevator{
         System.out.println("hey going down");
         char t ='d';
         for(int i=myfloor;i>=0 ; i--){
-            Thread.sleep(2000);
+            // Thread.sleep(2000);
             if(floorMap.get(i)!=0){
                 floorMap.put(i, 0);
                 Open(i,t);
@@ -129,7 +144,7 @@ class Elevator{
         System.out.println("hey going up");
         char t ='u';
         for(int i=myfloor;i<=maxfloor ; i++){
-            Thread.sleep(2000);
+            // Thread.sleep(2000);
             if(floorMap.get(i)!=0){
                 floorMap.put(i, 0);
                 Open(i,t);
