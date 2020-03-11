@@ -6,12 +6,12 @@ import java.util.Scanner;
 class Elevator{
     static HashMap<Integer,Integer> floorMap = new HashMap<>();
     static List<Integer> floorlist = new ArrayList<>();
-    static HashMap<Integer,String> passengerMap =new  HashMap<>();
     static Scanner in = new Scanner(System.in);
     public static String go;
     public static int current = 0;
     public static int myfloor = 0;
     public static int maxfloor = 9;
+    public static int minfloor =0;
 //call the function or code
     public static void main(String[] args) throws InterruptedException {
         floor();
@@ -24,21 +24,44 @@ class Elevator{
             floorMap.put(i,0);
         }
     }
+
+    public static int count() throws InterruptedException{
+        int c=0;
+        for ( int i = 0; i <= maxfloor; i++) {
+            c=floorMap.get(i)+c;
+        }
+        return c;
+    }
 //fuction called when lift opens
     public static void Open(int j,char t) throws InterruptedException{
-        // Thread.sleep(1000);
+        Thread.sleep(1000);
         System.out.println("doors are opening for "+j+" make space");
-        // Thread.sleep(2000);
+        myfloor=j;
+        int s=count();
+        if(s == 0){
+            System.out.println("enter u or d");
+            char d=in.next().toLowerCase().charAt(0);
+            addPassenger(myfloor,d );
+            if(d=='d'){
+                goingDown();
+                t='d';
+            }else{
+                goingUp();
+                t='u';
+            }
+        }
+        Thread.sleep(2000);
         addPassenger(j,t);
     }
 //add passenger in between
-    public static void addPassenger(int myfloor,char t) throws InterruptedException {
+    public static void addPassenger(int myfloor,char t) throws InterruptedException{
         System.out.println(floorMap);
+
+        
         System.out.println("enter the passenger boarded");
         int n= in.nextInt();
         current=myfloor;
         System.out.println(current);
-        
         // System.out.println("call by typing D or U");
         // go=in.next().toLowerCase();
         for(int i = 0 ; i < n ; i++ ){
@@ -47,36 +70,10 @@ class Elevator{
             if(current==myfloor){
                 System.out.println("we are on the same floor /n try filling details again");
                 // passenger();
-            }else if(myfloor>current && t=='d'){
-                System.out.println("the lift is going down");
-            }else if(myfloor>current && t=='u'){
-                floorMap.put(myfloor,floorMap.get(myfloor)+1);
-            }else if(myfloor<current && t=='u'){
-                System.out.println("the lift is going up");
-            }else if(myfloor>current && t=='d'){
-                floorMap.put(myfloor,floorMap.get(myfloor)+1);
             }
-                
-        }
-        String s = check(n);
-        if(s.length()==4){
-            System.out.println("the lift is going down");
-            goingDown();
-        }else if (s.length()==2){
-            System.out.println("the lift is going up");
-            goingUp();
-        }else{
-            System.out.println("we are on the same floor as pressed");
-            System.out.println("where do you want to go u or d");
-            char r=in.next().toLowerCase().charAt(0);
-            if(r=='u'){
-                goingUp();
-            }else if(r=='d'){
-                goingDown();
-            }else {
-                System.out.println("invalid input");
-                mechanism();
-            }
+
+            floorMap.put(myfloor,floorMap.get(myfloor)+1);
+
         }
     }
 //initial passenger
@@ -90,10 +87,7 @@ class Elevator{
             System.out.println("lift is coming up");
         else 
             System.out.println("doors are opening");
-        // Thread.sleep(myfloor*1000);
-        char t = 'u';
-        addPassenger(myfloor,t);
-        System.out.println(floorMap);
+        Thread.sleep(myfloor*1000);
         mechanism();
     }
 //check whether up or down 
@@ -118,29 +112,29 @@ class Elevator{
     }
 //when lift is going up
     public static void goingDown() throws InterruptedException{
+        System.out.println(floorMap);
         System.out.println("hey going down");
         char t ='d';
-        for(int i=current;i>=0 ; i--){
-            // Thread.sleep(2000);
+        for(int i=myfloor;i>=0 ; i--){
+            Thread.sleep(2000);
             if(floorMap.get(i)!=0){
                 floorMap.put(i, 0);
                 Open(i,t);
             }
         }
-        addPassenger(myfloor, t);
     }
 // when lift is going down
     public static void goingUp()throws InterruptedException {
+        System.out.println(floorMap);
         System.out.println("hey going up");
         char t ='u';
-        for(int i=current;i<=maxfloor ; i++){
-            // Thread.sleep(2000);
+        for(int i=myfloor;i<=maxfloor ; i++){
+            Thread.sleep(2000);
             if(floorMap.get(i)!=0){
                 floorMap.put(i, 0);
                 Open(i,t);
             }
         }
-        addPassenger(myfloor, t);
     }
 //mechanism to decide the user data
     public static void mechanism() throws InterruptedException {
@@ -157,8 +151,10 @@ class Elevator{
             System.out.println("where do you want to go u or d");
             char r=in.next().toLowerCase().charAt(0);
             if(r=='u'){
+                addPassenger(myfloor, r);
                 goingUp();
             }else if(r=='d'){
+                addPassenger(myfloor, r);
                 goingDown();
             }else {
                 System.out.println("invalid input");
